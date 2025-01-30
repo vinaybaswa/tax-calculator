@@ -26,7 +26,7 @@ const TaxCalculator = () => {
         (res) => res.json()
       );
 
-      setResult(tax_brackets);
+      setResult(calculateTax(incomeNum, tax_brackets));
       calculateTax(incomeNum, tax_brackets);
       console.log(result);
     } catch (error) {
@@ -59,12 +59,6 @@ const TaxCalculator = () => {
           taxAmount: taxForBracket,
         });
       }
-    });
-
-    console.log({
-      totalTax,
-      effectiveRate: totalTax / income,
-      bracketTaxes,
     });
 
     return {
@@ -113,6 +107,44 @@ const TaxCalculator = () => {
           {loading ? "Calculating..." : "Calculate Tax"}
         </button>
       </form>
+
+      {result && (
+        <div>
+          <div>
+            <h2>Calculated Tax</h2>
+
+            <div>
+              <div>
+                <span>Total Tax:</span>
+                <span>${result.totalTax.toFixed(2)}</span>
+              </div>
+
+              <div>
+                <span>Effective Tax Rate:</span>
+                <span>{(result.effectiveRate * 100).toFixed(2)}%</span>
+              </div>
+
+              <div>
+                <h3>Breakdown by Tax Bracket</h3>
+                <div>
+                  {result.bracketTaxes.map((bracketTax, index) => (
+                    <div key={index}>
+                      <span>
+                        ${bracketTax.bracket.min.toLocaleString()} -
+                        {bracketTax.bracket.max
+                          ? `$${bracketTax.bracket.max.toLocaleString()}`
+                          : "and up"}
+                        ({(bracketTax.bracket.rate * 100).toFixed(1)}%):
+                      </span>
+                      <span>${bracketTax.taxAmount.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
