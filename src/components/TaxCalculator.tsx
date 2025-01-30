@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { TaxCalculated } from "../types/tax-types";
+import { TaxBracket, TaxCalculated } from "../types/tax-types";
 
 const SUPPORTED_YEARS = [2019, 2020, 2021, 2022];
 const BASE_URL = "http://localhost:5001/tax-calculator";
@@ -27,6 +27,7 @@ const TaxCalculator = () => {
       );
 
       setResult(tax_brackets);
+      calculateTax(incomeNum, tax_brackets);
       console.log(result);
     } catch (error) {
       throw new Error(
@@ -35,6 +36,42 @@ const TaxCalculator = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateTax = (
+    income: number,
+    brackets: TaxBracket[]
+  ): TaxCalculated => {
+    let totalTax = 0;
+    const bracketTaxes: { bracket: TaxBracket; taxAmount: number }[] = [];
+
+    brackets.forEach((bracket, index) => {
+      const { min, rate } = bracket;
+      const max = bracket.max ?? Infinity;
+
+      let taxableAmount = 0;
+      if (income > min) {
+        taxableAmount = Math.min(income - min, max - min);
+        const taxForBracket = taxableAmount * rate;
+        totalTax += taxForBracket;
+        bracketTaxes.push({
+          bracket,
+          taxAmount: taxForBracket,
+        });
+      }
+    });
+
+    console.log({
+      totalTax,
+      effectiveRate: totalTax / income,
+      bracketTaxes,
+    });
+
+    return {
+      totalTax,
+      effectiveRate: totalTax / income,
+      bracketTaxes,
+    };
   };
 
   return (
