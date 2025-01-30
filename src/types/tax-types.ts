@@ -8,7 +8,7 @@ export interface TaxResponse {
   tax_brackets: TaxBracket[];
 }
 
-export interface TaxCalculation {
+export interface TaxCalculated {
   totalTax: number;
   effectiveRate: number;
   bracketTaxes: {

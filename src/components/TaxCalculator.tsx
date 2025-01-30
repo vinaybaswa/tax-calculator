@@ -1,18 +1,56 @@
+import { useState } from "react";
+
+import { TaxCalculated } from "../types/tax-types";
+
+const SUPPORTED_YEARS = [2019, 2020, 2021, 2022];
+const BASE_URL = "http://localhost:5001/tax-calculator";
+
 const TaxCalculator = () => {
+  const [income, setIncome] = useState<string>("");
+  const [year, setYear] = useState<string>("2022");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<TaxCalculated | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setResult(null);
+
+    try {
+      const incomeNum = parseFloat(income);
+      if (isNaN(incomeNum) || incomeNum < 0) {
+        throw new Error("Please enter a valid income amount");
+      }
+
+      const { tax_brackets } = await fetch(`${BASE_URL}/tax-year/${year}`).then(
+        (res) => res.json()
+      );
+
+      setResult(tax_brackets);
+      console.log(result);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "An unexpected error occurred"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <div>
         <h1>Tax Calculator</h1>
       </div>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="income">Annual Income ($)</label>
           <input
             type="number"
             id="income"
-            value="120000"
-            onChange={() => {}}
+            value={income}
+            onChange={(e) => setIncome(e.target.value)}
             placeholder="Enter your annual income"
             required
           />
@@ -20,23 +58,23 @@ const TaxCalculator = () => {
 
         <div>
           <label htmlFor="year">Tax Year</label>
-          <select id="year" value="2022" onChange={() => {}} required>
-            <option key="2019" value="2019">
-              2019
-            </option>
-            <option key="2020" value="2020">
-              2020
-            </option>
-            <option key="2021" value="2021">
-              2021
-            </option>
-            <option key="2022" value="2022">
-              2022
-            </option>
+          <select
+            id="year"
+            value="2022"
+            onChange={(e) => setYear(e.target.value)}
+            required
+          >
+            {SUPPORTED_YEARS.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
           </select>
         </div>
 
-        <button type="submit">Calculate Tax</button>
+        <button disabled={loading} type="submit">
+          {loading ? "Calculating..." : "Calculate Tax"}
+        </button>
       </form>
     </div>
   );
