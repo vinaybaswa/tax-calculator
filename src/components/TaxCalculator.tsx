@@ -10,17 +10,20 @@ const TaxCalculator = () => {
   const [income, setIncome] = useState<string>("");
   const [year, setYear] = useState<string>("2022");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<TaxCalculated | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     setResult(null);
 
     try {
       const incomeNum = parseFloat(income);
       if (isNaN(incomeNum) || incomeNum < 0) {
-        throw new Error("Please enter a valid income amount");
+        setError("Please enter a valid income amount");
+        return;
       }
 
       const { tax_brackets } = await fetch(`${BASE_URL}/tax-year/${year}`).then(
@@ -28,12 +31,9 @@ const TaxCalculator = () => {
       );
 
       setResult(calculateTax(incomeNum, tax_brackets));
-      calculateTax(incomeNum, tax_brackets);
-      console.log(result);
     } catch (error) {
-      throw new Error(
-        error instanceof Error ? error.message : "An unexpected error occurred"
-      );
+      setError("An unexpected error occurred, Try again");
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -97,6 +97,10 @@ const TaxCalculator = () => {
             >
               {loading ? "Calculating..." : "Calculate Tax"}
             </button>
+
+            {error && (
+              <div className="text-red-600 text-sm text-center">{error}</div>
+            )}
           </form>
 
           {result && (
