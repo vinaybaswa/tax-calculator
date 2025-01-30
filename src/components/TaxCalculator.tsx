@@ -103,18 +103,18 @@ const TaxCalculator = () => {
             <div className="mt-8 space-y-6">
               <div className="bg-gray-50 rounded-lg p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                  Tax Calculation Results
+                  Calculated Tax
                 </h2>
 
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center border-b border-gray-200">
                     <span className="text-gray-600">Total Tax:</span>
                     <span className="text-lg font-semibold">
                       ${result.totalTax.toFixed(2)}
                     </span>
                   </div>
 
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center border-b border-gray-200">
                     <span className="text-gray-600">Effective Tax Rate:</span>
                     <span className="text-lg font-semibold">
                       {(result.effectiveRate * 100).toFixed(2)}%
@@ -129,7 +129,7 @@ const TaxCalculator = () => {
                       {result.bracketTaxes.map((bracketTax, index) => (
                         <div
                           key={index}
-                          className="flex justify-between items-center text-sm"
+                          className="flex justify-between items-center text-sm border-b border-gray-200"
                         >
                           <span className="text-gray-600">
                             ${bracketTax.bracket.min.toLocaleString()} -
