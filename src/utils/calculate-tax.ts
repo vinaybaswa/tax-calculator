@@ -25,7 +25,7 @@ const calculateTax = (
 
     return {
       totalTax,
-      effectiveRate: totalTax / income,
+      effectiveRate: totalTax / income || 0,
       bracketTaxes,
     };
   };

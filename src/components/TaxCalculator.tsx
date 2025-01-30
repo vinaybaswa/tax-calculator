@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { Calculator } from "lucide-react";
+
 import { TaxCalculated } from "../types/tax-types";
 import calculateTax from "../utils/calculate-tax";
 
@@ -44,6 +46,7 @@ const TaxCalculator = () => {
       <div className="max-w-3xl mx-auto">
         <div className="bg-white rounded-lg shadow-xl p-6 md:p-8">
           <div className="flex items-center justify-center mb-8">
+            <Calculator className="w-12 h-12" />
             <h1 className="ml-3 text-3xl font-bold text-gray-900">
               Tax Calculator
             </h1>
