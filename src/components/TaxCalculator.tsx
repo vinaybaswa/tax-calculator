@@ -5,8 +5,10 @@ import { Calculator } from "lucide-react";
 import Result from "./Result";
 import Error from "./Error";
 
-import { TaxCalculated } from "../types/tax-types";
-import calculateTax from "../utils/calculate-tax";
+import { TaxCalculated } from "../types/taxTypes";
+// import calculateTax from "../utils/calculateTax";
+// import fetchTaxBrackets from "../utils/fetchTaxBrackets";
+import { calculateTax, fetchTaxBrackets } from "../services/taxService";
 
 const SUPPORTED_YEARS = [2019, 2020, 2021, 2022];
 const BASE_URL = "http://localhost:5001/tax-calculator";
@@ -31,9 +33,7 @@ const TaxCalculator = () => {
         return;
       }
 
-      const { tax_brackets } = await fetch(`${BASE_URL}/tax-year/${year}`).then(
-        (res) => res.json()
-      );
+      const { tax_brackets } = await fetchTaxBrackets(parseInt(year));
 
       setResult(calculateTax(incomeNum, tax_brackets));
     } catch (error) {

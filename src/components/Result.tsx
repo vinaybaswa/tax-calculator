@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { TaxCalculated } from "../types/tax-types";
+import { TaxCalculated } from "../types/taxTypes";
 
 const Result: FC<{ result: TaxCalculated }> = ({ result }) => {
   return (
