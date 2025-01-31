@@ -4,7 +4,6 @@ const BASE_URL = "http://localhost:5001/tax-calculator";
 
 export const fetchTaxBrackets = async (year: number): Promise<TaxResponse> => {
   try {
-    console.log(year);
     const response = await fetch(`${BASE_URL}/tax-year/${year}`);
     const data = await response.json();
     return data;
