@@ -1,4 +1,4 @@
-import { TaxResponse } from "../types/taxTypes";
+import { TaxBracket, TaxResponse, TaxCalculated } from "../types/taxTypes";
 
 const BASE_URL = "http://localhost:5001/tax-calculator";
 
@@ -12,8 +12,6 @@ export const fetchTaxBrackets = async (year: number): Promise<TaxResponse> => {
     throw error;
   }
 };
-
-import { TaxBracket, TaxCalculated } from "../types/taxTypes";
 
 export const calculateTax = (
   income: number,
